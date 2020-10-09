@@ -6,7 +6,8 @@
         "dev": "next dev",
         "build": "yarn lint && next build",
         "start": "next start",
-        "lint": "eslint --fix ."
+        "lint": "eslint --fix .",
+        "heroku-postbuild": "npm run build"
     },
     "dependencies": {
         "next": "9.5.3",

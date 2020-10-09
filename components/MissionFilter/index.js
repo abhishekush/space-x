@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useState, useCallback, useEffect } from 'react';
 import styles from '../../styles/Home.module.css';
 
@@ -6,6 +7,10 @@ const startYear = 2006;
 const yearArray = Array.from({ length: currentYear - startYear + 1 }, (v, k) => startYear + k);
 
 const booleanButtons = [1, 0];
+
+const propTypes = {
+    onUpdate: PropTypes.func.isRequired
+};
 
 const Title = ({ children }) => (
     <>
@@ -20,6 +25,10 @@ const Title = ({ children }) => (
             }}></div>
     </>
 );
+
+Title.propTypes = {
+    children: PropTypes.string.isRequired
+};
 
 const MissionFilter = (props) => {
     const [selectedYear, changeYear] = useState();
@@ -137,5 +146,7 @@ const MissionFilter = (props) => {
         </div>
     );
 };
+
+MissionFilter.propTypes = propTypes;
 
 export default MissionFilter;
