@@ -5,7 +5,7 @@
     "scripts": {
         "dev": "next dev",
         "build": "yarn lint && next build",
-        "start": "next start",
+        "start": "next start -p $PORT",
         "lint": "eslint --fix .",
         "heroku-postbuild": "npm run build"
     },
