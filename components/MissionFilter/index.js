@@ -9,7 +9,8 @@ const yearArray = Array.from({ length: currentYear - startYear + 1 }, (v, k) => 
 const booleanButtons = [1, 0];
 
 const propTypes = {
-    onUpdate: PropTypes.func.isRequired
+    onUpdate: PropTypes.func.isRequired,
+    initialFilter: PropTypes.object
 };
 
 const Title = ({ children }) => (
@@ -31,12 +32,17 @@ Title.propTypes = {
 };
 
 const MissionFilter = (props) => {
-    const [selectedYear, changeYear] = useState();
+    const [selectedYear, changeYear] = useState(props.initialFilter?.launch_year);
+
     const isFirstRun = useRef(true);
     const { onUpdate } = props;
-    const [successfulLaunch, toggleSuccessfulLaunch] = useState();
+    const [successfulLaunch, toggleSuccessfulLaunch] = useState(
+        props.initialFilter?.launch_success
+    );
 
-    const [successfulLanding, toggleSuccessfulLanding] = useState();
+    const [successfulLanding, toggleSuccessfulLanding] = useState(
+        props.initialFilter?.land_success
+    );
     useEffect(() => {
         if (isFirstRun.current) {
             isFirstRun.current = false;

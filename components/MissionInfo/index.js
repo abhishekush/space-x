@@ -10,7 +10,7 @@ const propTypes = {
     flightNumber: PropTypes.number.isRequired,
     launchYear: PropTypes.string.isRequired,
     successfulLaunch: PropTypes.bool.isRequired,
-    successfulLanding: PropTypes.bool.isRequired
+    successfulLanding: PropTypes.bool
 };
 
 const MissionInfo = (props) => {
@@ -23,12 +23,11 @@ const MissionInfo = (props) => {
                         flex: 1,
                         flexDirection: 'column',
                         borderRadius: 10
-                        // paddingRight: 12
                     }}>
                     <div
                         style={{
                             display: 'flex',
-                            // flex: 1,
+
                             backgroundColor: '#f7f7f7',
                             alignItems: 'center',
                             justifyContent: 'center'

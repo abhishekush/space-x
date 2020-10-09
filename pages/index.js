@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import MissionInfo from '../components/MissionInfo';
@@ -22,13 +23,17 @@ async function getMissions(param = {}) {
 
 function Home(props) {
     const [missions, setMissions] = useState([]);
-
+    const router = useRouter();
     const onFilterUpdate = useCallback(async (params) => {
         try {
             const resArr = await getMissions(params);
             setMissions(resArr);
+            router.push({
+                pathname: '',
+                query: JSON.parse(JSON.stringify(params))
+            });
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     }, []);
 
@@ -41,17 +46,20 @@ function Home(props) {
             <div className={styles.content}>
                 <div className={styles.gridRow}>
                     <div className={styles.filterDiv}>
-                        <MissionFilter onUpdate={onFilterUpdate} />
+                        <MissionFilter
+                            onUpdate={onFilterUpdate}
+                            initialFilter={props.initialFilter}
+                        />
                     </div>
                     <div className={styles.mainDiv}>
                         <div
                             className={styles.gridRow}
                             style={{ alignItems: 'center', justifyContent: 'center' }}>
-                            {(missions.length ? missions : props.missions).map((data) => {
+                            {(missions.length ? missions : props.missions || []).map((data) => {
                                 return (
                                     <MissionInfo
                                         key={`${data.mission_name}#${data.flight_number}}`}
-                                        image={data.links.mission_patch}
+                                        image={data.links.mission_patch_small}
                                         missionName={data.mission_name}
                                         flightNumber={data.flight_number}
                                         missionId={data.mission_id}
@@ -75,19 +83,18 @@ function Home(props) {
 }
 
 const propTypes = {
-    missions: PropTypes.array.isRequired
+    missions: PropTypes.array.isRequired,
+    initialFilter: PropTypes.object
 };
 
-export async function getStaticProps() {
-    const missions = await getMissions();
-
-    return {
-        props: {
-            missions
-        }
-    };
-}
-
 Home.propTypes = propTypes;
+
+Home.getInitialProps = async ({ query }) => {
+    const missions = await getMissions(query);
+    const booleanize = (val) => (/^true|^false$/gi.test(val) ? JSON.parse(val) : undefined);
+    const launch_success = booleanize(query.launch_success);
+    const land_success = booleanize(query.land_success);
+    return { initialFilter: { ...query, launch_success, land_success }, missions };
+};
 
 export default Home;
