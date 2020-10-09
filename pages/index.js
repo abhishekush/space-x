@@ -39,12 +39,13 @@ function Home(props) {
 
     return (
         <div className={styles.container} style={{ backgroundColor: '#f7f7f7' }}>
-            <Head>
-                <title>Space-X Missions</title>
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
             <div className={styles.content}>
+                <h3 style={{ margin: 0, padding: '10px 0px 0px 10px' }}>SpaceX Launch Programs</h3>
                 <div className={styles.gridRow}>
+                    <Head>
+                        <title>Space-X Missions</title>
+                        <link rel="icon" href="/favicon.ico" />
+                    </Head>
                     <div className={styles.filterDiv}>
                         <MissionFilter
                             onUpdate={onFilterUpdate}
