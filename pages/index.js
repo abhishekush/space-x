@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import Head from 'next/head';
 import MissionInfo from '../components/MissionInfo';
 import styles from '../styles/Home.module.css';
@@ -6,22 +7,20 @@ import MissionFilter from '../components/MissionFilter';
 
 export function urlEncodeQueryParams(data) {
     const params = Object.keys(data).map((key) =>
-        data[key] ? `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}` : ''
+        data[key] || typeof data[key] === 'boolean'
+            ? `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`
+            : ''
     );
     return params.filter((value) => !!value).join('&');
 }
 
-async function getMissions(param) {
+async function getMissions(param = {}) {
     const queryParams = urlEncodeQueryParams({ ...param, limit: 100 });
     const response = await fetch(`https://api.spaceXdata.com/v3/launches?${queryParams}`);
     return response.json();
 }
 
-// initial page fetch using ssr
-// least inline styles
-// abort controller
-
-export default function Home() {
+function Home(props) {
     const [missions, setMissions] = useState([]);
 
     const onFilterUpdate = useCallback(async (params) => {
@@ -48,7 +47,7 @@ export default function Home() {
                         <div
                             className={styles.gridRow}
                             style={{ alignItems: 'center', justifyContent: 'center' }}>
-                            {missions.map((data) => {
+                            {(missions.length ? missions : props.missions).map((data) => {
                                 return (
                                     <MissionInfo
                                         key={`${data.mission_name}#${data.flight_number}}`}
@@ -66,17 +65,29 @@ export default function Home() {
                         </div>
                     </div>
 
-                    {/* <footer className={styles.footer}>
-                        <a
-                            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-                            target="_blank"
-                            rel="noopener noreferrer">
-                            Powered by{' '}
-                            <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-                        </a>
-                    </footer> */}
+                    <footer className={styles.footer}>
+                        <span>Developed By: Abhishek Mishra</span>
+                    </footer>
                 </div>
             </div>
         </div>
     );
 }
+
+const propTypes = {
+    missions: PropTypes.array.isRequired
+};
+
+export async function getStaticProps() {
+    const missions = await getMissions();
+
+    return {
+        props: {
+            missions
+        }
+    };
+}
+
+Home.propTypes = propTypes;
+
+export default Home;
