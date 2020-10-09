@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import styles from '../../styles/Home.module.css';
 
 const currentYear = new Date().getFullYear();
@@ -32,11 +32,16 @@ Title.propTypes = {
 
 const MissionFilter = (props) => {
     const [selectedYear, changeYear] = useState();
+    const isFirstRun = useRef(true);
     const { onUpdate } = props;
     const [successfulLaunch, toggleSuccessfulLaunch] = useState();
 
     const [successfulLanding, toggleSuccessfulLanding] = useState();
     useEffect(() => {
+        if (isFirstRun.current) {
+            isFirstRun.current = false;
+            return;
+        }
         onUpdate({
             launch_success: successfulLaunch,
             land_success: successfulLanding,

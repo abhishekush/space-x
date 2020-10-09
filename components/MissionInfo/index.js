@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import PropTypes from 'prop-types';
 import InfoText from './InfoText';
 import styles from '../../styles/Home.module.css';
@@ -63,4 +64,4 @@ const MissionInfo = (props) => {
 
 MissionInfo.propTypes = propTypes;
 
-export default MissionInfo;
+export default memo(MissionInfo);
